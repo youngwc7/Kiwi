@@ -26,6 +26,13 @@ class Board
         Board(float size, float offsetX, float offsetY);
 
         /**
+         * Draws the board and label to the given window at start of launch.
+         * 
+         * @param window The SFML RenderWindow to draw the board and label on.
+         */
+        void initDraw(sf::RenderWindow& window);
+
+        /**
          * Draws the board and label to the given window.
          * 
          * @param window The SFML RenderWindow to draw the board and label on.
@@ -38,8 +45,11 @@ class Board
         float   offsetX;
         float   offsetY;
 
+        /* board square shape */
         sf::RectangleShape  board;
+        /* idk if ill use */
         sf::Font            font;
+        /* idk if ill use */
         sf::Text            label;
 
         /* String representation of the chessboard */
@@ -50,10 +60,15 @@ class Board
         /* Map to hold sprites for chess pieces */
         std::map<std::string, sf::Sprite> pieceSprites;
 
+        /* invoked by Board::Board() */
         void loadPieceTextures();
+        /* invoked by Board::Board() */
         void initializeChessboard();
-        void drawSquares(sf::RenderWindow& window);
-        void drawPieces(sf::RenderWindow& window);
+
+        /* helper function for Board::draw() */
+        void initDrawSquares(sf::RenderWindow& window);
+        /* helper function for Board::draw() */
+        void initDrawPieces(sf::RenderWindow& window);
 };
 
 

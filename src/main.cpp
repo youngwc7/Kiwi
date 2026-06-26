@@ -11,7 +11,7 @@ int main(void)
     window.setFramerateLimit(60);
 
     Board board;
-
+    
     while (window.isOpen()) 
     {
         sf::Event event;
@@ -27,7 +27,7 @@ int main(void)
         
         // Render
         window.clear(sf::Color(30, 30, 30)); // Dark green background
-        board.draw(window);
+        board.initDraw(window);
         window.display();
     }
 

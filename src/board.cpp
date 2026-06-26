@@ -7,29 +7,9 @@
 Board::Board(float size, float offsetX, float offsetY) 
     : size(size), offsetX(offsetX), offsetY(offsetY)
 {
-    // Set Board Square
-    board.setSize(sf::Vector2f(size, size));
-    board.setPosition(offsetX, offsetY);
-    board.setFillColor(sf::Color(139, 69, 19)); 
-
-    // Load default system font
-    if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")) {
-        throw std::runtime_error("Failed to load font.");
-    }
-
-    // init test -- hello world
-    label.setFont(font);
-    label.setString("Hello, World!");
-    label.setCharacterSize(48);
-    label.setFillColor(sf::Color::White);
-
-    // Center the text on the square
-    sf::FloatRect textBounds = label.getLocalBounds();
-    label.setOrigin(textBounds.left + textBounds.width / 2.f,
-                    textBounds.top  + textBounds.height / 2.f);
-    label.setPosition(offsetX + size / 2.f, offsetY + size / 2.f);
-
+    squareSize = size / RANK_NUM;
     loadPieceTextures();
+    initializeChessboard();
 
 }
 
@@ -68,10 +48,64 @@ void Board::loadPieceTextures()
     }
 }
 
+void Board::initializeChessboard()
+{
+    /* Initialize piece string */
+    std::string backRankLetters[] = {"R", "N", "B", "Q", "K", "B", "N", "R"};
+
+    /* self reminder that [0][0] is top left of chessboard (a8 square) */
+    for (int f = 0; f < FILE_NUM; ++f)
+    {
+        chessboardString[0][f] = "b" + backRankLetters[f];
+        chessboardString[7][f] = "w" + backRankLetters[f];
+
+        chessboardString[1][f] = "bP";
+        chessboardString[6][f] = "wP";
+
+        /* Initialize empty squares */
+        for (int r = 2; r < 6; ++r) chessboardString[r][f] = "";   
+    }
+}
+
+void Board::initDrawSquares(sf::RenderWindow& window)
+{
+    /* square entity */
+    sf::RectangleShape square(sf::Vector2f(squareSize, squareSize));
+
+    /* draw 64 squares; draws starting from a8 square */
+    for (int r = 0; r < RANK_NUM; ++r)
+    {
+        for (int f = 0; f < FILE_NUM; ++f)
+        {
+            square.setPosition(offsetX + f * squareSize, offsetY + r * squareSize);
+            square.setFillColor((r + f) % 2 == 0 ? LIGHT : DARK);
+            window.draw(square);
+        }
+    }
+}
+
+void Board::initDrawPieces(sf::RenderWindow& window)
+{
+    for (int r = 0; r < RANK_NUM; ++r)
+    {
+        for (int f = 0; f < FILE_NUM; ++f)
+        {
+            const std::string& piece = chessboardString[r][f];
+            
+            if (piece.empty()) continue;
+            
+            /* draw sprite */
+            sf::Sprite& sprite = pieceSprites[piece];
+            sprite.setPosition(offsetX + f * squareSize, offsetY + r * squareSize);
+            window.draw(sprite);   
+        }
+    }
+}
 
 /*---------------------------------- PUBLIC MEMBER FUNCTIONS-------------------------------------------*/
 
-void Board::draw(sf::RenderWindow& window) {
-    window.draw(board);
-    window.draw(label);
+void Board::initDraw(sf::RenderWindow& window) 
+{
+    initDrawSquares(window);
+    initDrawPieces(window); 
 }
