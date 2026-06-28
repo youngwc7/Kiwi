@@ -5,9 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
  
  
 # Source files
-set(SOURCES
-    src/board.cpp
-    src/main.cpp
+file(GLOB SOURCES
+    "src/*.cpp"
 )
  
 add_executable(Kiwi ${SOURCES})

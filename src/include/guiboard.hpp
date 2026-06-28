@@ -1,11 +1,21 @@
 #ifndef BOARD_HPP
 #define BOARD_HPP
 
+/**
+ * @file board.hpp
+ * @brief This file contains the declaration of the Board class, which is the GUI representation of the chessboard.
+ * It strictly handles the rendering of chess pieces and squares on the board using SFML. 
+ * The Board class is responsible for loading piece textures, 
+ * initializing the chessboard state, and drawing the board and pieces to the window. 
+ * It also handles clicks and GUI movement of pieces, BUT DOES NOT HANDLE GAME LOGIC OR RULES.
+ */
+
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <map>
 
-class Board
+class GuiBoard
 {
     public:
 
@@ -14,36 +24,50 @@ class Board
          * The default size is set to 80% of the window size, and the position
          * is set to 10% offset from the top-left corner of the window.
          */
-        Board();
+        GuiBoard();
 
         /**
-         * Constructs a Board object with the specified size and position.
+         * Constructs a GuiBoard object with the specified size and position.
          * 
          * @param size The size of the board square.
          * @param offsetX The X offset for the board's position.
          * @param offsetY The Y offset for the board's position.
          */
-        Board(float size, float offsetX, float offsetY);
+        GuiBoard(float size, float offsetX, float offsetY);
 
         /**
          * Draws the board and label to the given window at start of launch.
          * 
          * @param window The SFML RenderWindow to draw the board and label on.
          */
-        void initDraw(sf::RenderWindow& window);
+        void draw(sf::RenderWindow& window);
 
         /**
          * Draws the board and label to the given window.
          * 
          * @param window The SFML RenderWindow to draw the board and label on.
+         * @param srcSquare The source square index.
+         * @param destSquare The destination square index.
          */
-        void draw(sf::RenderWindow& window);
+        void moveDraw(sf::RenderWindow& window, int srcSquare, int destSquare);
+
+        /**
+         * Handles mouse click events on the board. selection, deselection, piece movement.
+         * @param mouseX The X coordinate of the mouse click.
+         * @param mouseY The Y coordinate of the mouse click.
+         */
+        void handleClick(sf::RenderWindow& window, int mouseX, int mouseY);
 
     private:
-        float   size;
+        float   boardSize;
         float   squareSize;
         float   offsetX;
         float   offsetY;
+
+        /* mouse selected square (-1 if none) */
+        int     selectedSquare;
+        /* highlight of the most recent move made by opponent (-1 if start of game) */
+        int     prevDestSquare;
 
         /* board square shape */
         sf::RectangleShape  board;
@@ -66,9 +90,15 @@ class Board
         void initializeChessboard();
 
         /* helper function for Board::draw() */
-        void initDrawSquares(sf::RenderWindow& window);
+        void drawSquares(sf::RenderWindow& window);
         /* helper function for Board::draw() */
-        void initDrawPieces(sf::RenderWindow& window);
+        void drawPieces(sf::RenderWindow& window);
+
+        /* draws pale green highlight on square */
+        void highlightSquare(sf::RenderWindow& window, sf::Color highlightColor, int squareIndex);
+
+        /* translates pixel coordinates to square indices */
+        int pixelToSquare(int pixelX, int pixelY);
 };
 
 
