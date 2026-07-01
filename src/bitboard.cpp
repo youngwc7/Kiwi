@@ -12,14 +12,14 @@ Bitboard::Bitboard()
     whiteKnights = 0x0000000000000042;
     whiteBishops = 0x0000000000000024;
     whiteRooks = 0x0000000000000081;
-    whiteQueens = 0x0000000000000010;
-    whiteKing = 0x0000000000000080;
+    whiteQueens = 0x0000000000000008;
+    whiteKing = 0x0000000000000010;
 
     blackPawns = 0x00FF000000000000;
     blackKnights = 0x4200000000000000;
     blackBishops = 0x2400000000000000;
     blackRooks = 0x8100000000000000;
-    blackQueens = 0x10000000000000;
-    blackKing = 0x80000000000000;
+    blackQueens = 0x08000000000000;
+    blackKing = 0x10000000000000;
 }
 

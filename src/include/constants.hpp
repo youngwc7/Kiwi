@@ -27,5 +27,4 @@ static const sf::Color BLUE_HIGHLIGHT(173, 216, 230, 128);
 // for in check king highlights; NOT IMPLEMENTED
 static const sf::Color RED_HIGHLIGHT(255, 0, 0, 128);
 
-
 #endif // CONSTANTS_HPP

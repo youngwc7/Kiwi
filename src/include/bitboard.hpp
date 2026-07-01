@@ -3,9 +3,10 @@
 
 #include "constants.hpp"
 #include "guiboard.hpp"
-
+#include "piece.hpp"
 #include <cstdint>
 #include <string.h>
+
 
 class Bitboard
 {
@@ -22,13 +23,59 @@ class Bitboard
         //  */
         // Bitboard(std::string startChessboardString[RANK_NUM][FILE_NUM]);
     
+        /**
+         * @brief Get the piece at a specific square on the chessboard.
+         * @param square The square index (0-63) to query.
+         * @return The Piece enum value representing the piece at the specified square.
+         */
+        Piece getPieceAt(int square) const;
+
+        /**
+         * @brief Check if a specific square on the chessboard is occupied by any piece.
+         * @param square The square index (0-63) to query.
+         * @return true if the square is occupied, false otherwise.
+         */
+        bool isOccupiedAt(int square) const;
+
+        /**
+         * @brief Get the color of the piece at a specific square on the chessboard.
+         * @param square The square index (0-63) to query.
+         * @return The Color enum value representing the color of the piece at the specified square.
+         * lowkey might not be useful
+         */
+        Color getColorAt(int square) const;
+
+        /**
+         *  @brief lookup combinedwhite piece bitboards (does not change class)
+         *  @return uint64_t representing all white pieces on the board
+         */ 
+        uint64_t getWhiteBitboard() const;
+
+        /**
+         * @brief lookup combined black piece bitboards (does not change class)
+         * @return uint64_t representing all black pieces on the board
+         */
+        uint64_t getBlackBitboard() const;
+
+        /**
+         * @brief lookup combined bitboards (does not change class)
+         * @return uint64_t representing all pieces on the board
+         */
+        uint64_t getFullBitboard() const;
+
+        /**
+         * @brief lookup vacancy bitboard (does not change class)
+         * @return uint64_t representing all empty squares on the board (~bitboard)
+         */
+        uint64_t vacancyBitboard() const;
+
     private:
-    /* general board information; shows occupancy, but not piece types */
+        /* COMBINED BITBOARDS*/
         uint64_t board;
         uint64_t whitePieces; 
         uint64_t blackPieces;
 
-        /* white pieces */
+        /* WHITE PIECE BITBOARDS */
         uint64_t whitePawns;
         uint64_t whiteKnights;
         uint64_t whiteBishops;
@@ -36,7 +83,7 @@ class Bitboard
         uint64_t whiteQueens;
         uint64_t whiteKing;
 
-        /* black pieces */
+        /* BLACK PIECE BITBOARDS */
         uint64_t blackPawns;
         uint64_t blackKnights;
         uint64_t blackBishops;
