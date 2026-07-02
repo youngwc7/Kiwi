@@ -2,6 +2,7 @@
 #define PIECE_HPP
 
 #include <cstdint>
+#include <string>
 
 /* PIECE TYPES */
 enum PieceType : uint8_t
@@ -46,8 +47,39 @@ inline bool isWhite(Piece p)  { return (p & WHITE) != 0; }
 
 inline bool isBlack(Piece p)  { return (p & BLACK) != 0; }
 
-inline bool isEmpty(Piece p)  { return p == NONE; }
+inline bool isEmptyPiece(Piece p)  { return p == NONE; }
 
 inline PieceType getType(Piece p) { return static_cast<PieceType>(p & 0b00111111); }
 
+/* Convert a Piece enum to its string representation */
+
+/**
+ * @brief Converts a Piece enum to its corresponding chess notation string.
+ * This chess string is primarily used in GUI. 
+ * Utilized in a loop to convert bitboard to Guiboard::chessboardString
+ * 
+ * @param p The Piece enum to convert.
+ * @return A string representing the chess piece, e.g: wP or bN; "" for empty square.
+ */
+inline std::string pieceToChessString(Piece p)
+{
+    switch (p)
+    {
+        case WHITE_PAWN:   return "wP";
+        case WHITE_KNIGHT: return "wN";
+        case WHITE_BISHOP: return "wB";
+        case WHITE_ROOK:   return "wR";
+        case WHITE_QUEEN:  return "wQ";
+        case WHITE_KING:   return "wK";
+
+        case BLACK_PAWN:   return "bP";
+        case BLACK_KNIGHT: return "bN";
+        case BLACK_BISHOP: return "bB";
+        case BLACK_ROOK:   return "bR";
+        case BLACK_QUEEN:  return "bQ";
+        case BLACK_KING:   return "bK";
+
+        default:           return "";
+    }
+}
 #endif // PIECE_HPP 

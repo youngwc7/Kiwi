@@ -4,8 +4,6 @@
 #include "constants.hpp"
 #include "guiboard.hpp"
 #include "piece.hpp"
-#include <cstdint>
-#include <string.h>
 
 
 class Bitboard
@@ -69,6 +67,45 @@ class Bitboard
          */
         uint64_t vacancyBitboard() const;
 
+        /**
+         * @brief Set a piece at a specific square on the chessboard.
+         * @param piece The Piece enum value to set at the specified square.
+         * @param square The square index (0-63) where the piece will be placed
+         */
+        void setPiece(Piece piece, int square);
+
+        /**
+         * @brief Remove a piece from a specific square on the chessboard.
+         * @param square The square index (0-63) from which the piece will be removed.
+         */
+        void removePiece(int square);
+
+        /**
+         * @brief Move a piece from one square to another on the chessboard.
+         * @param destSquare The destination square index (0-63).
+         * @param srcSquare The source square index (0-63).
+         * 
+         * NOTE THAT THIS SHOULD BE LATER CAREFULLY UTILIZED
+         *  TO ALLOW ENPASSANT, CASTLES, PROMOTION.
+         * DO NOT SIMPLY CALL THIS FUNCTION TO MAKE A MOVE, U MUST CONSIDER THOSE CASES
+         */
+        void movePiece(int destSquare, int srcSquare);
+
+        /**
+         * @brief Convert the bitboard to a chessboard string representation FOR GUI. Guiboard::chessboardString
+         * @param chessboardString string representing the chessboard (should be Guiboard::chessboardString).
+         */
+        void bitboardToChessboardString(std::string chessboardString[RANK_NUM][FILE_NUM]) const;
+
+        /************* DEBUG *************/
+
+        // void printBitboard(uint64_t bitboard) const;
+
+        /**
+         *  @brief prints bitboard into a chessboard with piece codes
+         */
+        void printBoard() const;
+
     private:
         /* COMBINED BITBOARDS*/
         uint64_t board;
@@ -90,6 +127,10 @@ class Bitboard
         uint64_t blackRooks;
         uint64_t blackQueens;
         uint64_t blackKing;
+
+        /******************* PRIVATE FUNCTIONS ********************/
+        uint64_t& getBitboardFromPiece(Piece piece);
+        const uint64_t& getBitboardFromPiece(Piece piece) const;
 
 };
 

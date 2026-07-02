@@ -91,7 +91,7 @@ class GuiBoard
 
         /* helper function for Board::draw() */
         void drawSquares(sf::RenderWindow& window);
-        /* helper function for Board::draw() */
+    /* helper function for Board::draw() */
         void drawPieces(sf::RenderWindow& window);
 
         /* draws pale green highlight on square */
