@@ -1,4 +1,5 @@
 #include "bitboard.hpp"
+#include <iostream>
 #include <stdexcept>
 #include <cassert>
  
@@ -24,6 +25,8 @@ Bitboard::Bitboard()
     blackKing = 0x1000000000000000;
 }
 
+/********************************BITBOARD GETS ********************************/
+
 uint64_t Bitboard::getWhiteBitboard() const
 {
     return whitePieces;
@@ -39,9 +42,51 @@ uint64_t Bitboard::getFullBitboard() const
     return board;
 }
 
-uint64_t Bitboard::vacancyBitboard() const
+uint64_t Bitboard::getVacancyBitboard() const
 {
     return ~board;
+}
+
+Piece Bitboard::getPieceAt(int square) const
+{
+    assert(square >= 0 && square < 64 && "Square index must be between 0 and 63");
+
+    uint64_t bitmask = (1ULL << square);
+
+    if (whitePawns & bitmask)   return WHITE_PAWN;
+    if (whiteKnights & bitmask) return WHITE_KNIGHT;
+    if (whiteBishops & bitmask) return WHITE_BISHOP;
+    if (whiteRooks & bitmask)   return WHITE_ROOK;
+    if (whiteQueens & bitmask)  return WHITE_QUEEN;
+    if (whiteKing & bitmask)    return WHITE_KING;
+
+    if (blackPawns & bitmask)   return BLACK_PAWN;
+    if (blackKnights & bitmask) return BLACK_KNIGHT;
+    if (blackBishops & bitmask) return BLACK_BISHOP;
+    if (blackRooks & bitmask)   return BLACK_ROOK;
+    if (blackQueens & bitmask)  return BLACK_QUEEN;
+    if (blackKing & bitmask)    return BLACK_KING;
+
+    return NONE; 
+}
+
+
+bool Bitboard::isOccupiedAt(int square) const
+{
+    assert(square >= 0 && square < 64 && "Square index must be between 0 and 63");
+    uint64_t bitmask = (1ULL << square);
+    return board & bitmask;
+}
+
+Color Bitboard::getColorAt(int square) const
+{
+    assert(square >= 0 && square < 64 && "Square index must be between 0 and 63");
+    uint64_t bitmask = (1ULL << square);
+
+    if (whitePieces & bitmask) return WHITE;
+    if (blackPieces & bitmask) return BLACK;
+
+    throw std::invalid_argument("indexed square has no piece; no color to return; possible wrong logic");
 }
 
 
@@ -111,7 +156,7 @@ void Bitboard::bitboardToChessboardString(std::string chessboardString[RANK_NUM]
     {
         for (int file = 0; file < FILE_NUM; ++file)
         {
-            int square = rank * FILE_NUM + file;
+            int square = (7 - rank) * FILE_NUM + file;
             Piece piece = getPieceAt(square);
             chessboardString[rank][file] = pieceToChessString(piece);
         }
@@ -166,3 +211,21 @@ const uint64_t& Bitboard::getBitboardFromPiece(Piece piece) const
 }
 
 
+void Bitboard::printBoard() const
+{
+    for (int rank = 0; rank < RANK_NUM; ++rank)
+    {
+        for (int file = 0; file < FILE_NUM; ++file)
+        {
+            int square = (7 - rank) * FILE_NUM + file;
+            Piece piece = getPieceAt(square);
+            std::string pieceStr = pieceToChessString(piece);
+            if (pieceStr.empty()) pieceStr = "--"; // Represent empty squares with "--"
+            std::cout << pieceStr << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "***********************" << std::endl;
+    std::cout << "***********************" << std::endl;
+}

@@ -2,7 +2,6 @@
 #define BITBOARD_HPP
 
 #include "constants.hpp"
-#include "guiboard.hpp"
 #include "piece.hpp"
 
 
@@ -65,7 +64,7 @@ class Bitboard
          * @brief lookup vacancy bitboard (does not change class)
          * @return uint64_t representing all empty squares on the board (~bitboard)
          */
-        uint64_t vacancyBitboard() const;
+        uint64_t getVacancyBitboard() const;
 
         /**
          * @brief Set a piece at a specific square on the chessboard.

@@ -19,7 +19,8 @@ enum PieceType : uint8_t
 enum Color : uint8_t
 {
     WHITE = 0b01000000,
-    BLACK = 0b10000000
+    BLACK = 0b10000000,
+    NO_COLOR = 0b00000000
 };
 
 // Piece combined
