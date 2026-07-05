@@ -1,5 +1,6 @@
 #include "guiboard.hpp"
 #include "constants.hpp"
+#include "bitboard.hpp"
 
 int main(void) 
 {
@@ -7,10 +8,13 @@ int main(void)
                             "Kiwi Chess",
                             sf::Style::Titlebar | sf::Style::Close);
 
-
     window.setFramerateLimit(60);
 
-    GuiBoard guiboard;
+    /* Bitboard and GUI board set to standard (default) position */
+    Bitboard bitboard;
+    GuiBoard guiboard(bitboard);
+
+    bitboard.printBoard();
     
     while (window.isOpen()) 
     {

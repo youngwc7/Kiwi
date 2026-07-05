@@ -5,8 +5,8 @@
 #include <array>
 #include <cassert>
 
-GuiBoard::GuiBoard(float boardSize, float offsetX, float offsetY) 
-    : boardSize(boardSize), offsetX(offsetX), offsetY(offsetY), selectedSquare(-1), prevDestSquare(-1)
+GuiBoard::GuiBoard(Bitboard& board, float boardSize, float offsetX, float offsetY) 
+    : bitboard(board), boardSize(boardSize), offsetX(offsetX), offsetY(offsetY), selectedSquare(-1), prevDestSquare(-1)
 {
     squareSize = boardSize / RANK_NUM;
     loadPieceTextures();
@@ -14,7 +14,7 @@ GuiBoard::GuiBoard(float boardSize, float offsetX, float offsetY)
 
 }
 
-GuiBoard::GuiBoard() : GuiBoard(DEFAULT_WINDOW_HEIGHT * 0.8f, DEFAULT_WINDOW_WIDTH_OFFSET, DEFAULT_WINDOW_HEIGHT_OFFSET)
+GuiBoard::GuiBoard(Bitboard& board) : GuiBoard(board, DEFAULT_WINDOW_HEIGHT * 0.8f, DEFAULT_WINDOW_WIDTH_OFFSET, DEFAULT_WINDOW_HEIGHT_OFFSET)
 {}
 
 
@@ -176,6 +176,8 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
 {
     int clickedSquare = pixelToSquare(mouseX, mouseY);
 
+
+
     /* out of bounds click, deselect the square */
     if (clickedSquare == -1) 
     {
@@ -206,10 +208,25 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
             return;
         }
 
+        /* insert legal logic here. */
+
+
+        /* bitboard sync logic */
+        int clickedBitboardRank = 7 - (int) (clickedSquare / RANK_NUM);
+        int clickedBitboardFile = clickedSquare % FILE_NUM;
+        int selectedBitboardRank = 7 - (int) (selectedSquare / RANK_NUM);
+        int selectedBitboardFile = selectedSquare % FILE_NUM;
+
+        int clickedBitboardSquare = clickedBitboardRank * FILE_NUM + clickedBitboardFile;
+        int selectedBitboardSquare = selectedBitboardRank * FILE_NUM + selectedBitboardFile;
+        
+        bitboard.movePiece(clickedBitboardSquare, selectedBitboardSquare);
 
         /* The destination square is selected */
         moveDraw(window, selectedSquare, clickedSquare);
         // prevDestSquare = clickedSquare; // Update the previous destination square
         // selectedSquare = -1; // Deselect after moving
+
+        bitboard.printBoard();
     }
 }
