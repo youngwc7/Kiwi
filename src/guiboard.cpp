@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <array>
 #include <cassert>
+/* debug */
+#include <iostream>
 
 GuiBoard::GuiBoard(Bitboard& board, float boardSize, float offsetX, float offsetY) 
     : bitboard(board), boardSize(boardSize), offsetX(offsetX), offsetY(offsetY), selectedSquare(-1), prevDestSquare(-1)
@@ -210,7 +212,6 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
 
         /* insert legal logic here. */
 
-
         /* bitboard sync logic; bitboard rank orientation is inverted from gui board rank orientation */
         int clickedBitboardRank = 7 - (int) (clickedSquare / RANK_NUM);
         int clickedBitboardFile = clickedSquare % FILE_NUM;
@@ -220,6 +221,27 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         int clickedBitboardSquare = clickedBitboardRank * FILE_NUM + clickedBitboardFile;
         int selectedBitboardSquare = selectedBitboardRank * FILE_NUM + selectedBitboardFile;
         
+        /* test move encoding */
+        PieceType moving   = getType(bitboard.getPieceAt(selectedBitboardSquare));
+        PieceType captured = getType(bitboard.getPieceAt(clickedBitboardSquare));
+
+        Move testMove(selectedBitboardSquare, clickedBitboardSquare,
+                    false, VOID, NO_CASTLE,
+                    captured, moving);
+
+        std::cout << "--- Move Encoding Test ---\n";
+        std::cout << "src:      " << testMove.getSourceSquare() << "\n";
+        std::cout << "dest:     " << testMove.getDestSquare()   << "\n";
+        std::cout << "moving:   " << (int) bitboard.getColorAt(selectedBitboardSquare) << ", type: " << (int) testMove.getMovingPiece() << "\n";
+        
+if (bitboard.isOccupiedAt(clickedBitboardSquare))
+    std::cout << "captured: color=" << (int)bitboard.getColorAt(clickedBitboardSquare) 
+              << " type=" << (int)testMove.getCapturedPiece() << "\n";
+else
+    std::cout << "captured: none\n";
+        std::cout << "enpassant:" << testMove.isEnPassant()     << "\n";
+        std::cout << "--------------------------\n"; 
+
         bitboard.movePiece(clickedBitboardSquare, selectedBitboardSquare);
 
         /* The destination square is selected */

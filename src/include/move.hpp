@@ -1,8 +1,11 @@
 #ifndef MOVE_HPP
 #define MOVE_HPP
 
+#include "constants.hpp"
 #include "piece.hpp"
 #include <cstdint>
+
+/* Bit masks useful when working with struct Move */
 
 inline constexpr uint32_t SOURCE_SQUARE_MASK   = 0b00000000000000000000000000111111;
 inline constexpr uint32_t DEST_SQUARE_MASK     = 0b00000000000000000000111111000000;
@@ -12,6 +15,8 @@ inline constexpr uint32_t CASTLE_MASK          = 0b00000000000011110000000000000
 inline constexpr uint32_t CAPTURED_PIECE_MASK  = 0b00000011111100000000000000000000;
 inline constexpr uint32_t MOVING_PIECE_MASK    = 0b11111100000000000000000000000000;
 
+/* Useful LSB indications when working with struct Move */
+
 inline constexpr int SOURCE_SQUARE_BIT_LSB  = 0;
 inline constexpr int DEST_SQUARE_BIT_LSB    = 6;
 inline constexpr int ENPASSANT_BIT_LSB      = 12;
@@ -20,6 +25,7 @@ inline constexpr int CASTLE_BIT_LSB         = 16;
 inline constexpr int CAPTURED_PIECE_LSB     = 20;
 inline constexpr int MOVING_PIECE_LSB       = 26;
 
+/******************************** DATA STRUCT DEFINITIONS ********************************/
 
 enum CastleMove : uint8_t
 {
@@ -47,6 +53,20 @@ struct Move
 { 
     uint32_t move; 
 
+    /** 
+     * @brief Construct Move (encode Move) 
+     * @param srcSquare
+     * @param destSquare
+     * @param enpassant
+     * @param promotionType
+     * @param castles
+     * @param capturedPiece
+     * @param movingPiece
+     */
+    Move(int srcSquare, int destSquare, 
+        bool enpassant, PieceType promotionType, CastleMove castles, 
+        PieceType capturedPiece, PieceType movingPiece); 
+    
     /**
      * @brief Get the source square of the move.
      */
@@ -91,6 +111,29 @@ struct Move
      */
     PieceType getMovingPiece() const;
 
+};
+
+struct LegalMoveList
+{
+    private:
+        int numLegalMoves = 0;
+    
+    public:
+        Move legalMoves[THEORETICAL_MAX_LEGAL_MOVES];
+
+        /* USEFUL MEMBER FUNCTIONS */
+
+        /**
+         * adds legal move to legalMoves
+         */
+        void addLegalMove(Move move);
+
+        /**
+         * @return LegalMoveList::numLegalMoves
+         */
+        int getNumLegalMoves();
+
+        void clearLegalMoveList();
 };
 
 #endif /* MOVE_HPP */

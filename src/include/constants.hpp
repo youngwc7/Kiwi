@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
+/* The maximum number of legal moves possible is proven to be 218 */
+inline constexpr int THEORETICAL_MAX_LEGAL_MOVES    = 218;
+
 /* GUI width (square) side length */
 inline constexpr unsigned int DEFAULT_WINDOW_WIDTH = 1200;
 inline constexpr unsigned int DEFAULT_WINDOW_HEIGHT = 800;

@@ -11,6 +11,7 @@
  */
 
 #include "bitboard.hpp"
+#include "move.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <string>
