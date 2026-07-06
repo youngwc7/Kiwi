@@ -2,7 +2,7 @@
 
 int Move::getSourceSquare() const 
 {
-    return (move & SOURCE_SQUARE_MASK) // >> SOURCE_SQUARE_BIT_LSB;
+    return (move & SOURCE_SQUARE_MASK); // >> SOURCE_SQUARE_BIT_LSB;
 }
 
 int Move::getDestSquare() const 
@@ -12,7 +12,7 @@ int Move::getDestSquare() const
 
 bool Move::isEnPassant() const 
 {
-    return move & ENPASSANT_MASK // >> ENPASSANT_BIT_LSB;
+    return move & ENPASSANT_MASK; // >> ENPASSANT_BIT_LSB;
 }
 
 PieceType Move::getPromotionPiece() const 
