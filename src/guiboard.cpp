@@ -211,7 +211,7 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         /* insert legal logic here. */
 
 
-        /* bitboard sync logic */
+        /* bitboard sync logic; bitboard rank orientation is inverted from gui board rank orientation */
         int clickedBitboardRank = 7 - (int) (clickedSquare / RANK_NUM);
         int clickedBitboardFile = clickedSquare % FILE_NUM;
         int selectedBitboardRank = 7 - (int) (selectedSquare / RANK_NUM);
