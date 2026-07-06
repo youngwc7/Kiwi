@@ -7,7 +7,7 @@ class ChessState
 {
     public:
         /* Bitboard class instance */
-        Bitboard bitboard;
+        Bitboard& bitboard;
 
         /* flags for game state (utilized by engine/legal logic) */
 
@@ -33,10 +33,10 @@ class ChessState
          */
         Color   sideToMove;
          
-        /* Constructor for standard start chess position */
+        /**
+         * @brief Constructor for standard start chess position 
+         */ 
         ChessState(Bitboard& bitboard);
-
-    private:
 
 };
 
