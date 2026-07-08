@@ -4,8 +4,8 @@
 #include <SFML/Graphics.hpp>
 
 /* Chess board features */
-inline constexpr int NUM_COLORS = 2;
 inline constexpr int NUM_SQUARES = 64;
+inline constexpr int NUM_COLORS = 2;
 
 /* The maximum number of legal moves possible is proven to be 218 */
 inline constexpr int THEORETICAL_MAX_LEGAL_MOVES    = 218;
@@ -52,6 +52,7 @@ inline constexpr uint64_t NOT_A_AND_B_FILE_MASK = ~A_AND_B_FILE_MASK;
 inline constexpr uint64_t NOT_G_AND_H_FILE_MASK = ~G_AND_H_FILE_MASK;
 
 /* Useful enums that can be treated like constants */
+
 enum File : int
 {
     A_FILE = 0,
