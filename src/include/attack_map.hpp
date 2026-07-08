@@ -29,6 +29,8 @@ struct AttackMap
      */
     static void initAttackMap();
     
+    static void printBitboard(uint64_t bb);
+    
 private:
     
     /**
