@@ -6,6 +6,8 @@
 /* Chess board features */
 inline constexpr int NUM_SQUARES = 64;
 inline constexpr int NUM_COLORS = 2;
+inline constexpr int WHITE_INDEX = 0;
+inline constexpr int BLACK_INDEX = 1;
 
 /* The maximum number of legal moves possible is proven to be 218 */
 inline constexpr int THEORETICAL_MAX_LEGAL_MOVES    = 218;

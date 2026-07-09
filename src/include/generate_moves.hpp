@@ -20,17 +20,77 @@ class GenMoves
          */
         void generateLegalMoves(LegalMoveList& moveList);
 
+        void resetWhiteAttacks();
+        void resetBlackAttacks();
+        void resetWhiteMasks();
+        void resetBlackMasks();
+        void resetAll();
+
     private:
-        int kingIndex;
-        bool checkFlag;
-        bool doubleCheckFlag;
+        Color       moveColor;
 
-        uint64_t checkMask;
-        uint64_t pinnedPieces;
-        uint64_t enemyAttacks;
-        uint64_t pinRays[64];
+        /* White king as a square index (bitboard -> int) */
+        int         whiteKingIndex;
+        /* White is in check ? */
+        bool        whiteCheckFlag;
+        /* White is in double check ? */
+        bool        whiteDoubleCheckFlag;
 
-        void computePositionInfo();
+        /**
+         *  all squares black's checking piece is controlling, and it's own square. 
+         *  If white's non-pinned piece lands on the mask, it resolves the check.
+         * */
+        uint64_t    whiteCheckMask;
+        /* bitboard of all white's pinned pieces (cannot legally move) */
+        uint64_t    whitePinnedPieces;
+        /* bitboard all attacking squares white's pieces control */
+        uint64_t    whiteAttacks;
+        /* squares white's pawn attacks */
+        uint64_t    whitePawnAttacks;
+        /* squares white's knight attacks */
+        uint64_t    whiteKnightAttacks;
+        /* squares white's bishop attacks */
+        uint64_t    whiteBishopAttacks;
+        /* squares white's rook attacks */
+        uint64_t    whiteRookAttacks;
+        /* squares white's queen attacks */
+        uint64_t    whiteQueenAttacks;
+        /* squares white's king attacks */
+        uint64_t    whiteKingAttacks;
+        uint64_t    whitePinRays[64];
+
+        int         blackKingIndex;
+        bool        blackCheckFlag;
+        bool        blackDoubleCheckFlag;
+
+        /**
+         *  all squares white's checking piece is controlling, and it's own square. 
+         *  If black's non-pinned piece lands on the mask, it resolves the check.
+         * */
+        uint64_t    blackCheckMask;
+        /* bitboard of all black's pinned pieces (legally) */
+        uint64_t    blackPinnedPieces;
+        /* bitboard of all black's attacking squares (black is controlling) */
+        uint64_t    blackAttacks;
+        /* squares black's pawn attacks */
+        uint64_t    blackPawnAttacks;
+        /* squares black's knight attacks */
+        uint64_t    blackKnightAttacks;
+        /* squares black's bishohp attacks */
+        uint64_t    blackBishopAttacks;
+        /* squares black's rook attacks */
+        uint64_t    blackRookAttacks;
+        /* squares black's queen attacks */
+        uint64_t    blackQueenAttacks;
+        /* squares black's king attacks */
+        uint64_t    blackKingAttacks;
+        uint64_t    blackPinRays[64];
+
+        
+
+        void computePositionFeatures();
+
+        void generateAttacks(Color color);
 
         void generatePawnLegalMoves(LegalMoveList& moveList);
 
