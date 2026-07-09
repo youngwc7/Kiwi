@@ -96,6 +96,10 @@ class Bitboard
          */
         void bitboardToChessboardString(std::string chessboardString[RANK_NUM][FILE_NUM]) const;
 
+        uint64_t& getBitboardFromPiece(Piece piece);
+        
+        const uint64_t& getBitboardFromPiece(Piece piece) const;
+
         /************* DEBUG *************/
 
         // void printBitboard(uint64_t bitboard) const;
@@ -104,8 +108,7 @@ class Bitboard
          *  @brief prints bitboard into a chessboard with piece codes
          */
         void printBoard() const;
-
-    private:
+        
         /* COMBINED BITBOARDS*/
         uint64_t board;
         uint64_t whitePieces; 
@@ -126,11 +129,6 @@ class Bitboard
         uint64_t blackRooks;
         uint64_t blackQueens;
         uint64_t blackKing;
-
-        /******************* PRIVATE FUNCTIONS ********************/
-        uint64_t& getBitboardFromPiece(Piece piece);
-        const uint64_t& getBitboardFromPiece(Piece piece) const;
-
 };
 
 #endif // BITBOARD_HPP
