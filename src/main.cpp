@@ -1,6 +1,9 @@
 #include "guiboard.hpp"
 #include "constants.hpp"
 #include "bitboard.hpp"
+#include "attack_map.hpp"
+
+#include <iostream>
 
 int main(void) 
 {
@@ -15,6 +18,22 @@ int main(void)
     GuiBoard guiboard(bitboard);
 
     bitboard.printBoard();
+
+    AttackMap::initAttackMap();
+    // test knight on e4 (square 28)
+    std::cout << "Knight attacks from e4:\n";
+    AttackMap::printBitboard(AttackMap::knightAttackMap[28]);
+
+    // test king on e1 (square 4)
+    std::cout << "King attacks from e1:\n";
+    AttackMap::printBitboard(AttackMap::kingAttackMap[4]);
+
+    // test north ray from e4 (square 28)
+    std::cout << "North ray from e4:\n";
+    AttackMap::printBitboard(AttackMap::rayN[28]);
+
+    std::cout << "NE ray from d4: \n";
+    AttackMap::printBitboard(AttackMap::rayNE[FILE_NUM * RANK_4 + D_FILE]);
     
     while (window.isOpen()) 
     {
