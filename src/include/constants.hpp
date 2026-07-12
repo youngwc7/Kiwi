@@ -36,6 +36,8 @@ static const sf::Color BLUE_HIGHLIGHT(173, 216, 230, 128);
 // for in check king highlights; NOT IMPLEMENTED
 static const sf::Color RED_HIGHLIGHT(255, 0, 0, 128);
 
+static const sf::Color MOVE_HIGHLIGHT(255, 255, 0, 150); 
+
 /* Bit masks useful for move generation */
 inline constexpr uint64_t A_FILE_MASK = 0x0101010101010101;
 inline constexpr uint64_t B_FILE_MASK = 0x0202020202020202;
@@ -52,6 +54,9 @@ inline constexpr uint64_t NOT_H_FILE_MASK = ~H_FILE_MASK;
 
 inline constexpr uint64_t NOT_A_AND_B_FILE_MASK = ~A_AND_B_FILE_MASK;
 inline constexpr uint64_t NOT_G_AND_H_FILE_MASK = ~G_AND_H_FILE_MASK;
+
+inline constexpr uint64_t RANK_4_MASK = 0x00000000FF000000ULL;
+inline constexpr uint64_t RANK_5_MASK = 0x000000FF00000000ULL;
 
 /* Useful enums that can be treated like constants */
 

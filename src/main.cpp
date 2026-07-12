@@ -15,7 +15,8 @@ int main(void)
 
     /* Bitboard and GUI board set to standard (default) position */
     Bitboard bitboard;
-    GuiBoard guiboard(bitboard);
+    ChessState chessGame{bitboard};
+    GuiBoard guiboard(chessGame);
 
     bitboard.printBoard();
 

@@ -150,6 +150,49 @@ void GenMoves::generateAttacks(Color color)
     }
 }
 
+uint64_t GenMoves::getAttackMask(int square, Piece piece) const
+{
+    uint64_t friendly = isWhite(piece) ? chessGame.bitboard.getWhiteBitboard() 
+                                       : chessGame.bitboard.getBlackBitboard();
+    switch (getType(piece))
+    {
+        case KNIGHT:
+            return AttackMap::knightAttackMap[square] & ~friendly;
+
+        case KING:
+            return AttackMap::kingAttackMap[square] & ~friendly;
+
+        case PAWN:
+        {
+            uint64_t attacks = AttackMap::pawnAttackMap[isWhite(piece) ? WHITE_INDEX : BLACK_INDEX][square] 
+                               & chessGame.bitboard.getFullBitboard();  // captures only
+            // add push targets
+            uint64_t empty = chessGame.bitboard.getVacancyBitboard();
+            if (isWhite(piece))
+            {
+                uint64_t push = (1ULL << square) << 8 & empty;
+                /* for a double push to be possible, the destination should be 
+                 * on the fourth rank for white. Else double push = 0
+                 */
+                uint64_t doublePush = (push << 8) & empty & RANK_4_MASK;
+                attacks |= push | doublePush;
+            }
+            else
+            {
+                uint64_t push = (1ULL << square) >> 8 & empty;
+                /* for a double push to be possible, the destination should be 
+                 * on the fifth rank for black. Else double push = 0
+                 */
+                uint64_t doublePush = (push >> 8) & empty & RANK_5_MASK;
+                attacks |= push | doublePush;
+            }
+            return attacks;
+        }
+        default:
+            return 0ULL;
+    }
+}
+
 void GenMoves::generatePawnLegalMoves(LegalMoveList& moveList)
 {
     

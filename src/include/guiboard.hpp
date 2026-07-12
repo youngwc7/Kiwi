@@ -12,6 +12,9 @@
 
 #include "bitboard.hpp"
 #include "move.hpp"
+#include "piece.hpp"
+#include "generate_moves.hpp"
+#include "bit_utilities.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -21,7 +24,9 @@
 class GuiBoard
 {
     public:
+        ChessState& chessState;
         Bitboard& bitboard;
+        GenMoves moveGenerator;
 
         /* String representation of the chessboard */
         std::string chessboardString[8][8];
@@ -31,7 +36,7 @@ class GuiBoard
          * The default size is set to 80% of the window size, and the position
          * is set to 10% offset from the top-left corner of the window.
          */
-        GuiBoard(Bitboard& board);
+        GuiBoard(ChessState& board);
 
         /**
          * Constructs a GuiBoard object with the specified size and position.
@@ -40,7 +45,7 @@ class GuiBoard
          * @param offsetX The X offset for the board's position.
          * @param offsetY The Y offset for the board's position.
          */
-        GuiBoard(Bitboard& board, float size, float offsetX, float offsetY);
+        GuiBoard(ChessState& board, float size, float offsetX, float offsetY);
 
         /**
          * Draws the board and label to the given window at start of launch.
@@ -76,6 +81,8 @@ class GuiBoard
         /* highlight of the most recent move made by opponent (-1 if start of game) */
         int     prevDestSquare;
 
+        /* legal move squares for a given piece */
+        uint64_t legalMoveMask;
         /* board square shape */
         sf::RectangleShape  board;
         /* idk if ill use */

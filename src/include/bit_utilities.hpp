@@ -1,3 +1,6 @@
+#ifndef BIT_UTILITIES_HPP
+#define BIT_UTILITIES_HPP
+
 #include <cstdint>
 #include <cassert>
 
@@ -29,3 +32,5 @@ inline int popLSB(uint64_t& mask)
 
     return lsbIndex;
 }
+
+#endif /* BIT_UTILITIES_HPP */

@@ -7,8 +7,10 @@
 /* debug */
 #include <iostream>
 
-GuiBoard::GuiBoard(Bitboard& board, float boardSize, float offsetX, float offsetY) 
-    : bitboard(board), boardSize(boardSize), offsetX(offsetX), offsetY(offsetY), selectedSquare(-1), prevDestSquare(-1)
+GuiBoard::GuiBoard(ChessState& board, float boardSize, float offsetX, float offsetY) 
+    : chessState(board), bitboard(chessState.bitboard), 
+    moveGenerator(GenMoves{chessState}), boardSize(boardSize), 
+    offsetX(offsetX), offsetY(offsetY), selectedSquare(-1), prevDestSquare(-1)
 {
     squareSize = boardSize / RANK_NUM;
     loadPieceTextures();
@@ -16,7 +18,7 @@ GuiBoard::GuiBoard(Bitboard& board, float boardSize, float offsetX, float offset
 
 }
 
-GuiBoard::GuiBoard(Bitboard& board) : GuiBoard(board, DEFAULT_WINDOW_HEIGHT * 0.8f, DEFAULT_WINDOW_WIDTH_OFFSET, DEFAULT_WINDOW_HEIGHT_OFFSET)
+GuiBoard::GuiBoard(ChessState& board) : GuiBoard(board, DEFAULT_WINDOW_HEIGHT * 0.8f, DEFAULT_WINDOW_WIDTH_OFFSET, DEFAULT_WINDOW_HEIGHT_OFFSET)
 {}
 
 
@@ -146,6 +148,21 @@ void GuiBoard::draw(sf::RenderWindow& window)
     if (selectedSquare != -1) highlightSquare(window, GREEN_HIGHLIGHT, selectedSquare);
     if (prevDestSquare != -1) highlightSquare(window, BLUE_HIGHLIGHT, prevDestSquare);
 
+
+    /* Highlight legal move squares */
+    if (selectedSquare != -1 && legalMoveMask != 0ULL)
+    {
+        uint64_t tmp = legalMoveMask;
+        while (tmp)
+        {
+            int tmpSquare = popLSB(tmp);
+            int guiRank = 7 - (tmpSquare / 8);
+            int guiFile  = tmpSquare % 8;
+            int guiSquare    = guiRank * 8 + guiFile;
+            highlightSquare(window, MOVE_HIGHLIGHT, guiSquare);
+        }
+    }
+
     drawPieces(window); 
 }
 
@@ -184,6 +201,7 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
     if (clickedSquare == -1) 
     {
         selectedSquare = -1; // Deselect any selected square
+        legalMoveMask = 0ULL;
         return; 
     } 
 
@@ -197,6 +215,12 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         if (!chessboardString[rank][file].empty()) 
         {
             selectedSquare = clickedSquare;
+
+            int selectedBitboardRank = 7 - (selectedSquare / RANK_NUM);
+            int selectedBitboardFile  = selectedSquare % FILE_NUM;
+            int selectedBitboardSquare = selectedBitboardRank * FILE_NUM + selectedBitboardFile;
+            /* generate legal move squares for the piece */
+            legalMoveMask = moveGenerator.getAttackMask(selectedBitboardSquare, bitboard.getPieceAt(selectedBitboardSquare));
             // highlightSquare(window, selectedSquare);
         }
     } 
@@ -234,16 +258,21 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         std::cout << "dest:     " << testMove.getDestSquare()   << "\n";
         std::cout << "moving:   " << (int) bitboard.getColorAt(selectedBitboardSquare) << ", type: " << (int) testMove.getMovingPiece() << "\n";
         
-if (bitboard.isOccupiedAt(clickedBitboardSquare))
-    std::cout << "captured: color=" << (int)bitboard.getColorAt(clickedBitboardSquare) 
-              << " type=" << (int)testMove.getCapturedPiece() << "\n";
-else
-    std::cout << "captured: none\n";
+        if (bitboard.isOccupiedAt(clickedBitboardSquare))
+        {
+            std::cout << "captured: color=" << (int)bitboard.getColorAt(clickedBitboardSquare) 
+                    << " type=" << (int)testMove.getCapturedPiece() << "\n";
+        }
+        else
+        {
+            std::cout << "captured: none\n";
+        }        
+    
         std::cout << "enpassant:" << testMove.isEnPassant()     << "\n";
         std::cout << "--------------------------\n"; 
 
         bitboard.movePiece(clickedBitboardSquare, selectedBitboardSquare);
-
+        legalMoveMask = 0ULL;
         /* The destination square is selected */
         moveDraw(window, selectedSquare, clickedSquare);
         // prevDestSquare = clickedSquare; // Update the previous destination square

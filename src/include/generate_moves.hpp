@@ -20,6 +20,8 @@ class GenMoves
          */
         void generateLegalMoves(LegalMoveList& moveList);
 
+        uint64_t getAttackMask(int square, Piece piece) const;
+
         void resetWhiteAttacks();
         void resetBlackAttacks();
         void resetWhiteMasks();

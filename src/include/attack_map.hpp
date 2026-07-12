@@ -8,6 +8,12 @@
 
 #include "constants.hpp"
 
+/** 
+ * Once again, credit to MaksimKorzh 
+ * https://github.com/maksimKorzh/chess_programming
+ */
+#include "magic_constants.hpp"
+
 struct AttackMap
 {
     inline static uint64_t pawnAttackMap[NUM_COLORS][NUM_SQUARES] = {};
