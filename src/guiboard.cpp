@@ -150,7 +150,7 @@ void GuiBoard::draw(sf::RenderWindow& window)
 
 
     /* Highlight legal move squares */
-    if (selectedSquare != -1 && legalMoveMask != 0ULL)
+    if (selectedSquare != -1 && legalMoveMask)
     {
         uint64_t tmp = legalMoveMask;
         while (tmp)
@@ -221,6 +221,19 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
             int selectedBitboardSquare = selectedBitboardRank * FILE_NUM + selectedBitboardFile;
             /* generate legal move squares for the piece */
             legalMoveMask = moveGenerator.getAttackMask(selectedBitboardSquare, bitboard.getPieceAt(selectedBitboardSquare));
+            
+            uint64_t tmp = legalMoveMask;
+
+            while (tmp)
+            {
+                int tmpSquare = popLSB(tmp);
+                int guiRank = 7 - (tmpSquare / 8);
+                int guiFile  = tmpSquare % 8;
+                int guiSquare    = guiRank * 8 + guiFile;
+                
+                legalMoveSquares.push_back(guiSquare);
+            }
+            
             // highlightSquare(window, selectedSquare);
         }
     } 
@@ -245,39 +258,56 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         int clickedBitboardSquare = clickedBitboardRank * FILE_NUM + clickedBitboardFile;
         int selectedBitboardSquare = selectedBitboardRank * FILE_NUM + selectedBitboardFile;
         
-        /* test move encoding */
-        PieceType moving   = getType(bitboard.getPieceAt(selectedBitboardSquare));
-        PieceType captured = getType(bitboard.getPieceAt(clickedBitboardSquare));
+        // /* test move encoding */
+        // PieceType moving   = getType(bitboard.getPieceAt(selectedBitboardSquare));
+        // PieceType captured = getType(bitboard.getPieceAt(clickedBitboardSquare));
 
-        Move testMove(selectedBitboardSquare, clickedBitboardSquare,
-                    false, VOID, NO_CASTLE,
-                    captured, moving);
+        // Move testMove(selectedBitboardSquare, clickedBitboardSquare,
+        //             false, VOID, NO_CASTLE,
+        //             captured, moving);
 
-        std::cout << "--- Move Encoding Test ---\n";
-        std::cout << "src:      " << testMove.getSourceSquare() << "\n";
-        std::cout << "dest:     " << testMove.getDestSquare()   << "\n";
-        std::cout << "moving:   " << (int) bitboard.getColorAt(selectedBitboardSquare) << ", type: " << (int) testMove.getMovingPiece() << "\n";
+        // std::cout << "--- Move Encoding Test ---\n";
+        // std::cout << "src:      " << testMove.getSourceSquare() << "\n";
+        // std::cout << "dest:     " << testMove.getDestSquare()   << "\n";
+        // std::cout << "moving:   " << (int) bitboard.getColorAt(selectedBitboardSquare) << ", type: " << (int) testMove.getMovingPiece() << "\n";
         
-        if (bitboard.isOccupiedAt(clickedBitboardSquare))
-        {
-            std::cout << "captured: color=" << (int)bitboard.getColorAt(clickedBitboardSquare) 
-                    << " type=" << (int)testMove.getCapturedPiece() << "\n";
-        }
-        else
-        {
-            std::cout << "captured: none\n";
-        }        
+        // if (bitboard.isOccupiedAt(clickedBitboardSquare))
+        // {
+        //     std::cout << "captured: color=" << (int)bitboard.getColorAt(clickedBitboardSquare) 
+        //             << " type=" << (int)testMove.getCapturedPiece() << "\n";
+        // }
+        // else
+        // {
+        //     std::cout << "captured: none\n";
+        // }        
     
-        std::cout << "enpassant:" << testMove.isEnPassant()     << "\n";
-        std::cout << "--------------------------\n"; 
+        // std::cout << "enpassant:" << testMove.isEnPassant()     << "\n";
+        // std::cout << "--------------------------\n"; 
 
-        bitboard.movePiece(clickedBitboardSquare, selectedBitboardSquare);
+        /* only make legal move */
+        for (auto l = legalMoveSquares.cbegin() ; l != legalMoveSquares.cend(); ++l)
+        {
+            if (*l == clickedSquare)
+            {
+                bitboard.movePiece(clickedBitboardSquare, selectedBitboardSquare);
+
+                /* The destination square is selected */
+                moveDraw(window, selectedSquare, clickedSquare);
+
+                /* clear legal moves */
+                legalMoveMask = 0ULL;
+                legalMoveSquares.clear();
+
+                /* debug */
+                bitboard.printBoard();
+                return;
+            }
+        }
+
+        /* no legal square was clicked, deselect and make no move */
+        selectedSquare = -1;
         legalMoveMask = 0ULL;
-        /* The destination square is selected */
-        moveDraw(window, selectedSquare, clickedSquare);
-        // prevDestSquare = clickedSquare; // Update the previous destination square
-        // selectedSquare = -1; // Deselect after moving
-
-        bitboard.printBoard();
+        legalMoveSquares.clear();
+        return;
     }
 }

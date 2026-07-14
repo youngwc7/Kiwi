@@ -19,6 +19,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <map>
+#include <vector>
 
 
 class GuiBoard
@@ -83,6 +84,8 @@ class GuiBoard
 
         /* legal move squares for a given piece */
         uint64_t legalMoveMask;
+        std::vector<int> legalMoveSquares;
+
         /* board square shape */
         sf::RectangleShape  board;
         /* idk if ill use */
