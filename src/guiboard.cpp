@@ -308,6 +308,5 @@ void GuiBoard::handleClick(sf::RenderWindow& window, int mouseX, int mouseY)
         selectedSquare = -1;
         legalMoveMask = 0ULL;
         legalMoveSquares.clear();
-        return;
     }
 }

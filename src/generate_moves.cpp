@@ -154,6 +154,10 @@ uint64_t GenMoves::getAttackMask(int square, Piece piece) const
 {
     uint64_t friendly = isWhite(piece) ? chessGame.bitboard.getWhiteBitboard() 
                                        : chessGame.bitboard.getBlackBitboard();
+    
+    uint64_t enemy = isWhite(piece) ? chessGame.bitboard.getBlackBitboard() 
+                                    : chessGame.bitboard.getWhiteBitboard();
+
     switch (getType(piece))
     {
         case KNIGHT:
@@ -164,8 +168,9 @@ uint64_t GenMoves::getAttackMask(int square, Piece piece) const
 
         case PAWN:
         {
+            /* pawn can only attack enemy pieces */
             uint64_t attacks = AttackMap::pawnAttackMap[isWhite(piece) ? WHITE_INDEX : BLACK_INDEX][square] 
-                               & chessGame.bitboard.getFullBitboard();  // captures only
+                               & enemy;  
             // add push targets
             uint64_t empty = chessGame.bitboard.getVacancyBitboard();
             if (isWhite(piece))
