@@ -1,4 +1,4 @@
-# Kiwi Chess Engine
+# Kiwi Chess Engine - IN PROGRES -> LATE PHASE 2. 
 
 A C++ chess engine built from scratch with SFML GUI, classical search, and a planned Neural Network engine.
 
